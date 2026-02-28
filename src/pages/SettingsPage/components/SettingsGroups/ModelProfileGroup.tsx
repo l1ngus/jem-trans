@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import type { ModelProfile } from '@/app/types/ModelProfile';
 import type { SettingsGroupProps } from "../../types/SettingsGroupProps";
+import GroupWrapper from './GroupWrapper';
+import GroupHeading from './GroupHeading';
 import TextProperty from "../Properties/TextProperty";
 import SelectProperty from "../Properties/SelectProperty";
 import SwitchProperty from '../Properties/SwitchProperty';
@@ -58,8 +60,8 @@ export default ({ settings, changeSettingsProperty }: SettingsGroupProps) => {
   const isProfileIdValid = profiles.some(p => p.id === activeProfileId);
 
   return (
-    <div className='flex flex-col gap-2'>
-      <p className='mx-auto text-lg'>Model profile</p>
+    <GroupWrapper>
+      <GroupHeading>Model profile</GroupHeading>
       <div className="flex items-end gap-2">
         <SelectProperty label='Model'
           value={isProfileIdValid
@@ -108,6 +110,6 @@ export default ({ settings, changeSettingsProperty }: SettingsGroupProps) => {
         <SwitchProperty id='profile-proxy-switch' label='Use proxy for this profile'
           checked={currentProfile?.isProxyEnabled ?? false}
           onChange={value => handleProfileFieldChange('isProxyEnabled', value)} />}
-    </div>
+    </GroupWrapper>
   )
 }

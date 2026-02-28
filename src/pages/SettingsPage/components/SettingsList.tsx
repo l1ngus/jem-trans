@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import useSettings from "@/app/hooks/useSettings";
-import ModelProfileGroup from "./SettintsGroups/ModelProfileGroup";
-import GeneralGroup from "./SettintsGroups/GeneralGroup";
-import ProxyGroup from "./SettintsGroups/ProxyGroup";
+import ModelProfileGroup from "./SettingsGroups/ModelProfileGroup";
+import GeneralGroup from "./SettingsGroups/GeneralGroup";
+import ProxyGroup from "./SettingsGroups/ProxyGroup";
 import { Separator } from "@/components/ui/separator";
 
 export default function () {

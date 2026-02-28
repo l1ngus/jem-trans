@@ -58,6 +58,10 @@ export const TranslationProvider = ({ children }: PropsWithChildren) => {
   }, [settings]);
 
   const swapLangs = useCallback(() => {
+    if (translationResult.translation) {
+      sourceTextRef.current = translationResult.translation;
+      setTextForQuery(translationResult.translation);
+    }
     setLangPair(prev => {
       if (prev.source === 'auto') return prev;
       return { source: prev.target, target: prev.source };

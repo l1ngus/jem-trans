@@ -15,10 +15,7 @@ export default () => {
     }
     let proxyUrl = null
     if (settings.isProxyEnabled && profile.isProxyEnabled) {
-      // Use socks5:// scheme for SOCKS5 proxy, http:// for HTTP proxy
-      const scheme = settings.proxyProtocol === 'socks5' ? 'socks5://' : 
-                     settings.proxyProtocol === 'socks4' ? 'socks4://' : 'http://';
-      proxyUrl = `${scheme}${settings.proxyUser}:${settings.proxyPass}@${settings.proxyHost}:${settings.proxyPort}`
+      proxyUrl = `${settings.proxyProtocol}://${settings.proxyUser}:${settings.proxyPass}@${settings.proxyHost}:${settings.proxyPort}`
     }
     const apiUrl = profile.aiService === 'openaimanual'
       ? profile.serviceUrl

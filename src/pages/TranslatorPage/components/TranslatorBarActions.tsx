@@ -25,9 +25,9 @@ export default function () {
             <SelectValue placeholder="Choose language" />
           </SelectTrigger>
           <SelectContent position="popper">
-            <SelectItem key={'auto-target'} value="auto" >Auto</SelectItem>
+            <SelectItem key={'auto-source'} value="auto" >Auto</SelectItem>
             {langOptions.map(([langName, langCode]) =>
-              <SelectItem key={langCode + '-target'} className="capitalize" value={langCode}>
+              <SelectItem key={langCode + '-source'} className="capitalize" value={langCode}>
                 {langName}
               </SelectItem>
             )}

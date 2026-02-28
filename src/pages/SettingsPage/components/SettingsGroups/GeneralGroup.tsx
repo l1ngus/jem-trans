@@ -1,4 +1,6 @@
 import { commands } from '@/bindings';
+import GroupHeading from './GroupHeading';
+import GroupWrapper from './GroupWrapper';
 import SwitchProperty from '../Properties/SwitchProperty';
 import SliderProperty from "../Properties/SliderProperty";
 import SelectProperty from "../Properties/SelectProperty"
@@ -22,7 +24,8 @@ export default function ({ settings, changeSettingsProperty }: SettingsGroupProp
   }, [])
 
   return (
-    <>
+    <GroupWrapper>
+      <GroupHeading>General</GroupHeading>
       <SelectProperty label='Voice'
         defaultValue={settings.voice}
         selectItems={voices.map(voice => ({
@@ -43,6 +46,6 @@ export default function ({ settings, changeSettingsProperty }: SettingsGroupProp
         defaultValue={settings.autoTranslateDelay}
         onChange={(value) => changeSettingsProperty('autoTranslateDelay', value)}
         hint="Too low value can be dangerous because it could spam provider, which can limit your API." />
-    </>
+    </GroupWrapper>
   )
 }

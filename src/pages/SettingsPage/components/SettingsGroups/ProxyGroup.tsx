@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import GroupHeading from './GroupHeading';
+import GroupWrapper from './GroupWrapper';
+import { AppSettingsSchema } from '@/app/types/AppSettings';
 import type { SettingsGroupProps } from "../../types/SettingsGroupProps";
 import TextProperty from "../Properties/TextProperty";
 import SwitchProperty from '../Properties/SwitchProperty';
@@ -9,7 +12,8 @@ export default ({ settings, changeSettingsProperty }: SettingsGroupProps) => {
   const [currentIsProxyEnabled, setCurrentIsProxyEnabled] = useState(settings.isProxyEnabled);
 
   return (
-    <>
+    <GroupWrapper>
+      <GroupHeading>Proxy</GroupHeading>
       <SwitchProperty id='proxy-switch' label='Use proxy'
         defaultValue={settings.isProxyEnabled}
         onChange={(value) => {
@@ -21,10 +25,10 @@ export default ({ settings, changeSettingsProperty }: SettingsGroupProps) => {
       {currentIsProxyEnabled &&
         <SelectProperty label="Proxy protocol"
           defaultValue={settings.proxyProtocol}
-          selectItems={[
-            { value: 'https', label: 'HTTPS' },
-            { value: 'socks5', label: 'SOCKS5' }
-          ]}
+          selectItems={AppSettingsSchema.shape.proxyProtocol.unwrap().options.map(protocol => ({
+            value: protocol,
+            label: protocol.toUpperCase()
+          }))}
           onChange={value => changeSettingsProperty('proxyProtocol', value)} />}
 
       {currentIsProxyEnabled &&
@@ -46,6 +50,6 @@ export default ({ settings, changeSettingsProperty }: SettingsGroupProps) => {
         <TextProperty id='proxy-password-input' label='Proxy password'
           defaultValue={settings.proxyPass} type='password'
           onChange={value => changeSettingsProperty('proxyPass', value)} />}
-    </>
+    </GroupWrapper>
   )
 }
