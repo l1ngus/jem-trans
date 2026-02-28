@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useRef, useState, createContext, type PropsWithChildren } from 'react';
+import { useMemo, useCallback, useState, createContext, type PropsWithChildren } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { LangPair } from '@/app/types/Langs';
 import { DETECT_AND_SWAP_QUERY_KEY } from '../hooks/useDetectAndSwap';
@@ -8,7 +8,6 @@ import useSettings from '@/app/hooks/useSettings';
 import useUserMeta from '@/app/hooks/useUserMeta';
 
 type UpdateLangPairFn = (value: Partial<LangPair>) => void;
-type GetSourceTextFn = () => string;
 type UpdateSourceTextFn = (value: string) => void;
 
 export interface TranslationContextValue {
@@ -16,7 +15,7 @@ export interface TranslationContextValue {
   langPair: LangPair;
   translateCurrent: () => void;
   updateLangPair: UpdateLangPairFn;
-  getSourceText: GetSourceTextFn;
+  sourceText: string;
   updateSourceText: UpdateSourceTextFn;
   swapLangs: () => void;
 }
@@ -28,7 +27,7 @@ export const TranslationProvider = ({ children }: PropsWithChildren) => {
   const { getUserMeta, setUserMeta } = useUserMeta();
   const queryClient = useQueryClient();
   const [langPair, setLangPair] = useState<LangPair>(getUserMeta('lastLangPair'));
-  const sourceTextRef = useRef<string>('');
+  const [sourceText, setSourceText] = useState('');
   const [textForQuery, setTextForQuery] = useState('');
   const translationResult = useTranslateQuery({ term: textForQuery, sourceLang: langPair.source, targetLang: langPair.target });
 
@@ -44,10 +43,9 @@ export const TranslationProvider = ({ children }: PropsWithChildren) => {
     });
   }, [])
 
-  const getSourceText: GetSourceTextFn = useCallback(() => sourceTextRef.current, []);
   const updateSourceText: UpdateSourceTextFn = useCallback((value) => {
+    setSourceText(value);
     const trimmedValue = value.trim();
-    sourceTextRef.current = trimmedValue;
     if (settings.isAutoTranslateEnabled)
       if (trimmedValue)
         setTextForQueryDebounced(trimmedValue);
@@ -55,30 +53,28 @@ export const TranslationProvider = ({ children }: PropsWithChildren) => {
         preventChangingTextForQuery();
         setTextForQuery('');
       }
-  }, [settings]);
+  }, [settings.isAutoTranslateEnabled]);
 
   const swapLangs = useCallback(() => {
+    if (langPair.source === 'auto') return;
     if (translationResult.translation) {
-      sourceTextRef.current = translationResult.translation;
+      setSourceText(translationResult.translation);
       setTextForQuery(translationResult.translation);
     }
-    setLangPair(prev => {
-      if (prev.source === 'auto') return prev;
-      return { source: prev.target, target: prev.source };
-    });
-  }, [])
+    setLangPair({ source: langPair.target, target: langPair.source });
+  }, [translationResult.translation])
 
-  const translateCurrent = useCallback(() => setTextForQuery(sourceTextRef.current), []);
+  const translateCurrent = useCallback(() => setTextForQuery(sourceText), [sourceText]);
 
   const contextValue = useMemo<TranslationContextValue>(() => ({
     translationResult,
     langPair,
     translateCurrent,
     updateLangPair,
-    getSourceText,
+    sourceText,
     updateSourceText,
     swapLangs
-  }), [translationResult, langPair, translateCurrent, updateLangPair, getSourceText, swapLangs])
+  }), [translationResult, langPair, translateCurrent, updateLangPair, sourceText, swapLangs])
 
   return (
     <TranslationContext.Provider value={contextValue}>
