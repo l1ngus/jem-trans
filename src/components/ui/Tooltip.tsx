@@ -204,7 +204,7 @@ export default function Tooltip({
         role="tooltip"
         aria-hidden={!visible}
         style={tooltipStyle}
-        className={`pointer-events-none bg-background text-foreground text-sm rounded-md px-3 py-1 shadow-xl whitespace-normal border border-border break-words`}
+        className={`pointer-events-none bg-background text-foreground text-sm rounded-md px-3 py-1 shadow-xl whitespace-normal border border-border wrap-break-words`}
       >
         {hint}
       </div>

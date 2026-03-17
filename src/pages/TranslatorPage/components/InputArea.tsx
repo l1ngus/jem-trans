@@ -48,13 +48,16 @@ export default function () {
         onChange={handleChange} />
       <div className="absolute bottom-1.5 right-1.5 left-1.5 flex justify-between items-center gap-2">
         {translationResult.response.sourceCorrection &&
-          <Tooltip hint={<p>Did you mean: <b>{translationResult.response.sourceCorrection}</b></p>}>
+          <Tooltip className="min-w-0 shrink" hint={<p>Did you mean: <b>{translationResult.response.sourceCorrection}</b></p>}>
             <span
-              className="flex gap-0.5 items-center font-light whitespace-nowrap bg-background border pl-0.5 pr-1 rounded-md overflow-clip cursor-pointer"
+              className="flex gap-0.5 min-w-0 max-w-full items-center font-light bg-background border pl-0.5 pr-1 rounded-md cursor-pointer "
               onClick={handleApplySuggestion}
             >
-              <Lightbulb size={16} />
-              {translationResult.response.sourceCorrection}
+              <Lightbulb size={16} className='shrink-0' />
+              <span className="truncate">
+                {translationResult.response.sourceCorrection}
+              </span>
+
             </span>
           </Tooltip>
         }
