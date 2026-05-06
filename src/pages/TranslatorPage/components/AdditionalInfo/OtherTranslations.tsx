@@ -4,6 +4,7 @@ import TransList from "./TransList";
 import useOtherTranslationsQuery from "../../hooks/queries/useOtherTranslationsQuery";
 import useTranslation from "../../hooks/useTranslation";
 import type { TranslateOthersResponse, TranslateOthersWithPartsResponse } from "../../types/TranslateResponse";
+import { Spinner } from "@/components/ui/spinner";
 
 interface OtherTranslationsProps {
   className?: ClassValue;
@@ -14,14 +15,14 @@ interface TrGroup {
   translations: string[];
 }
 
-
 export default ({ className }: OtherTranslationsProps) => {
   const { translationResult, langPair, sourceText } = useTranslation();
-  const { response } = useOtherTranslationsQuery({
+  const { response, isFetching } = useOtherTranslationsQuery({
     sourceText,
     translatedText: translationResult.response.translation ?? '',
     sourceLang: langPair.source,
-    targetLang: langPair.target
+    targetLang: langPair.target,
+    maxSourceLength: 10
   });
 
   const isWithParts = response.otherTranslations.length > 0
@@ -51,6 +52,7 @@ export default ({ className }: OtherTranslationsProps) => {
           <TransList translations={group.translations} />
         </div>
       ))}
+      {isFetching && <Spinner className="m-auto size-8" />}
     </div>
   )
 }
