@@ -5,6 +5,8 @@ import useOtherTranslationsQuery from "../../hooks/queries/useOtherTranslationsQ
 import useTranslation from "../../hooks/useTranslation";
 import type { TranslateOthersResponse, TranslateOthersWithPartsResponse } from "../../types/TranslateResponse";
 import { Spinner } from "@/components/ui/spinner";
+import useSettings from "@/app/hooks/useSettings";
+import { useEffect, useState } from "react";
 
 interface OtherTranslationsProps {
   className?: ClassValue;
@@ -16,14 +18,24 @@ interface TrGroup {
 }
 
 export default ({ className }: OtherTranslationsProps) => {
+  const { settings } = useSettings();
   const { translationResult, langPair, sourceText } = useTranslation();
+  const [isQueryEnabled, setIsQueryEnabled] = useState(settings.isAutoAltTransFetchEnabled);
+
+  useEffect(() => {
+    if (settings.isAutoAltTransFetchEnabled) return
+    setIsQueryEnabled(false)
+  }, [sourceText]);
+
   const { response, isFetching } = useOtherTranslationsQuery({
     sourceText,
     translatedText: translationResult.response.translation ?? '',
     sourceLang: langPair.source,
     targetLang: langPair.target,
-    maxSourceLength: 10
+    maxSourceLength: settings.isAutoAltTransFetchEnabled ? 50 : undefined,
+    isEnabled: isQueryEnabled
   });
+
 
   const isWithParts = response.otherTranslations.length > 0
     && typeof (response.otherTranslations[0]) !== 'string'
@@ -45,8 +57,11 @@ export default ({ className }: OtherTranslationsProps) => {
 
   return (
     <div className={cn(className)}>
-      <p className="text-center ">Other translations</p>
-      {parsedTranslations.map(group => (
+      {settings.isAutoAltTransFetchEnabled
+        ? <p className="text-center ">Other translations</p>
+        : <p onClick={() => setIsQueryEnabled(true)} className="m-auto w-fit px-2 rounded-md cursor-pointer bg-accent select-none">Other translations</p>
+      }
+      {isQueryEnabled && !isFetching && parsedTranslations.map(group => (
         <div key={group.part}>
           <p>{group.part}</p>
           <TransList translations={group.translations} />

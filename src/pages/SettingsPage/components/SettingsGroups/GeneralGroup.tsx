@@ -2,8 +2,8 @@ import { commands } from '@/bindings';
 import { AppSettingsSchema } from '@/app/types/AppSettings';
 import GroupHeading from './GroupHeading';
 import GroupWrapper from './GroupWrapper';
-import SwitchProperty from '../Properties/SwitchProperty';
-import SliderProperty from "../Properties/SliderProperty";
+// import SwitchProperty from '../Properties/SwitchProperty';
+// import SliderProperty from "../Properties/SliderProperty";
 import SelectProperty from "../Properties/SelectProperty"
 import type { SettingsGroupProps } from "../../types/SettingsGroupProps";
 import { useEffect, useState } from 'react';
@@ -42,18 +42,6 @@ export default function ({ settings, changeSettingsProperty }: SettingsGroupProp
         }))}
         onChange={value => changeSettingsProperty('voice', value)}
         placeholder='Select voice' />
-      <SwitchProperty id='auto-language-switching-switch' label='Auto language switching'
-        defaultValue={settings.isAutoLanguageSwitchEnabled}
-        onChange={(value) => changeSettingsProperty('isAutoLanguageSwitchEnabled', value)}
-        hint="Language swapping after any input" />
-      <SwitchProperty id='auto-translate-switch' label='Auto translate'
-        defaultValue={settings.isAutoLanguageSwitchEnabled}
-        onChange={(value) => changeSettingsProperty('isAutoTranslateEnabled', value)}
-        hint="Translation after a small delay without pressing a button." />
-      <SliderProperty label="Auto translate delay (ms)" max={2000} step={10}
-        defaultValue={settings.autoTranslateDelay}
-        onChange={(value) => changeSettingsProperty('autoTranslateDelay', value)}
-        hint="Too low value can be dangerous because it could spam provider, which can limit your API." />
     </GroupWrapper>
   )
 }
