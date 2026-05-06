@@ -12,7 +12,7 @@ export interface UseOtherTranslationsQueryOptions {
   translatedText: string;
   sourceLang: LangCode | 'auto';
   targetLang: LangCode;
-  // withParts: boolean; // with parts of speech
+  maxSourceLength?: number;
 }
 export type UseOtherTranslationsQueryResult = {
   response: OtherTranslationsResponse;
@@ -41,7 +41,8 @@ export default (translateOptions: UseOtherTranslationsQueryOptions): UseOtherTra
     return result;
   }
 
-  const isEnabled = !!translateOptions.translatedText;
+  const isEnabled = !!translateOptions.translatedText
+    && (!translateOptions.maxSourceLength || translateOptions.sourceText.length <= translateOptions.maxSourceLength);
 
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ['transalte-other-key',

@@ -22,6 +22,7 @@ export default ({ term, sourceLang, targetLang }: UseTranslateQueryOptions): Use
     }),
     enabled: isEnabled,
     retry: false,
+    placeholderData: undefined
   })
 
   const response = data ?? { translation: '', sourceCorrection: '' };
