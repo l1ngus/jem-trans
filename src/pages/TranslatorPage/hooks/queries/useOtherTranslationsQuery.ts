@@ -13,6 +13,7 @@ export interface UseOtherTranslationsQueryOptions {
   sourceLang: LangCode | 'auto';
   targetLang: LangCode;
   maxSourceLength?: number;
+  isEnabled?: boolean;
 }
 export type UseOtherTranslationsQueryResult = {
   response: OtherTranslationsResponse;
@@ -23,6 +24,7 @@ export default (translateOptions: UseOtherTranslationsQueryOptions): UseOtherTra
 
   const fetchOtherTranslations = async ({ sourceText, translatedText, sourceLang, targetLang }: UseOtherTranslationsQueryOptions): Promise<OtherTranslationsResponse> => {
     const prompt = getOtherTranslationsPrompt({ sourceText, translatedText, sourceLang, targetLang });
+    console.log('Alt request')
     const response = await commands.askLlm([{
       role: 'user',
       content: prompt
@@ -41,8 +43,11 @@ export default (translateOptions: UseOtherTranslationsQueryOptions): UseOtherTra
     return result;
   }
 
-  const isEnabled = !!translateOptions.translatedText
-    && (!translateOptions.maxSourceLength || translateOptions.sourceText.length <= translateOptions.maxSourceLength);
+  const isEnabled = (translateOptions.isEnabled || typeof (translateOptions.isEnabled) === 'undefined')
+    && (
+      !!translateOptions.translatedText
+      && (!translateOptions.maxSourceLength || translateOptions.sourceText.length <= translateOptions.maxSourceLength)
+    );
 
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ['transalte-other-key',
