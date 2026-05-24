@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "WEBKIT_DISABLE_DMABUF_RENDERER=1 tauri"
+    "tauri": "WEBKIT_DISABLE_DMABUF_RENDERER=1 tauri",
+    "build-tauri": "NO_STRIP=true npm run tauri build"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

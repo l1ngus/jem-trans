@@ -13,13 +13,6 @@ use tokio::sync::Mutex;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
-    //
-    // Load voices on startup
-    let rt = tokio::runtime::Runtime::new().unwrap();
-    let voices = rt
-        .block_on(msedge_tts::voice::get_voices_list_async())
-        .expect("Failed to load voices");
-
     let builder = Builder::<tauri::Wry>::new()
         .commands(collect_commands![
             commands::llm::set_llm_config,
@@ -40,10 +33,23 @@ pub fn run() {
             openai_client: Mutex::new(None),
             audio_mixer: Mutex::new(None),
             _audio_stream: Mutex::new(None),
-            voices: tokio::sync::RwLock::new(voices),
+            voices: tokio::sync::RwLock::new(Vec::new()),
         }))
         .setup(|app| {
             let state = app.try_state::<Arc<AppState>>().unwrap();
+
+            // Load voices in background — не блокируем запуск
+            let state_arc = Arc::clone(&state);
+            tauri::async_runtime::spawn(async move {
+                match msedge_tts::voice::get_voices_list_async().await {
+                    Ok(voices) => {
+                        *state_arc.voices.write().await = voices;
+                    }
+                    Err(e) => {
+                        eprintln!("Failed to load voices: {e}");
+                    }
+                }
+            });
 
             if let Ok(stream) = rodio::OutputStreamBuilder::open_default_stream() {
                 let mixer = stream.mixer().clone();
