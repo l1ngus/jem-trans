@@ -1,46 +1,42 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { cn } from "@/lib/utils"; // Стандартная утилита shadcn для классов (clsx + tailwind-merge)
+import { cn } from "@/lib/utils";
+import formatKeyboardCode from "@/app/helpers/formatKeyboardCode";
 
-// Интерфейс пропсов
 export interface ShortcutInputProps {
-  value: string[]; // Массив клавиш, например ['Ctrl', 'Shift', 'K']
+  value: string[];
   onChange: (value: string[]) => void;
   placeholder?: string;
   className?: string;
 }
 
-// Утилита для форматирования названий клавиш
-const formatKey = (key: string) => {
-  if (key === " ") return "Space";
-  if (key === "Control") return "Ctrl";
-  if (key === "Meta") return "Cmd";
-  if (key.length === 1) return key.toUpperCase();
-  return key;
-};
 
-// Список клавиш-модификаторов
-const MODIFIERS = ["Control", "Shift", "Alt", "Meta"];
+// Список кодов клавиш-модификаторов (левые и правые)
+const MODIFIER_CODES = [
+  "ControlLeft", "ControlRight",
+  "ShiftLeft", "ShiftRight",
+  "AltLeft", "AltRight",
+  "MetaLeft", "MetaRight", // Cmd на Mac / Win на Windows
+];
 
 export const ShortcutInput: React.FC<ShortcutInputProps> = ({
   value,
   onChange,
-  placeholder = "Press to write...",
+  placeholder = "Нажмите для записи...",
   className,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [liveKeys, setLiveKeys] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Обработчик нажатия клавиш
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!isRecording) return;
 
-      e.preventDefault(); // Блокируем стандартные действия браузера
+      e.preventDefault();
       e.stopPropagation();
 
-      // Отмена записи по Escape
-      if (e.key === "Escape") {
+      // Отмена по Escape
+      if (e.code === "Escape") {
         setIsRecording(false);
         setLiveKeys([]);
         containerRef.current?.blur();
@@ -48,7 +44,7 @@ export const ShortcutInput: React.FC<ShortcutInputProps> = ({
       }
 
       // Очистка по Backspace
-      if (e.key === "Backspace") {
+      if (e.code === "Backspace") {
         onChange([]);
         setIsRecording(false);
         setLiveKeys([]);
@@ -56,21 +52,21 @@ export const ShortcutInput: React.FC<ShortcutInputProps> = ({
         return;
       }
 
-      // Собираем модификаторы
+      // Собираем модификаторы (полагаемся на флаги события, это надежнее)
       const keys: string[] = [];
       if (e.ctrlKey) keys.push("Ctrl");
       if (e.metaKey) keys.push("Cmd");
       if (e.altKey) keys.push("Alt");
       if (e.shiftKey) keys.push("Shift");
 
-      const isModifierOnly = MODIFIERS.includes(e.key);
+      const isModifierOnly = MODIFIER_CODES.includes(e.code);
 
       if (isModifierOnly) {
-        // Если нажали только модификатор, показываем его в live-режиме
+        // Если зажали только модификатор, показываем процесс в live-режиме
         setLiveKeys(keys);
       } else {
-        // Если нажата обычная клавиша (вместе с модификаторами или без)
-        keys.push(formatKey(e.key));
+        // Добавляем саму клавишу, конвертируя её код
+        keys.push(formatKeyboardCode(e.code));
         onChange(keys);
         setIsRecording(false);
         setLiveKeys([]);
@@ -80,12 +76,12 @@ export const ShortcutInput: React.FC<ShortcutInputProps> = ({
     [isRecording, onChange]
   );
 
-  // Обработчик отпускания клавиш (нужно для live-обновления модификаторов)
   const handleKeyUp = useCallback(
     (e: KeyboardEvent) => {
       if (!isRecording) return;
       e.preventDefault();
 
+      // Обновляем live-режим, если пользователь отпустил один из модификаторов
       const keys: string[] = [];
       if (e.ctrlKey) keys.push("Ctrl");
       if (e.metaKey) keys.push("Cmd");
@@ -97,7 +93,6 @@ export const ShortcutInput: React.FC<ShortcutInputProps> = ({
     [isRecording]
   );
 
-  // Вешаем глобальные слушатели при старте записи
   useEffect(() => {
     if (isRecording) {
       window.addEventListener("keydown", handleKeyDown, { capture: true });
@@ -110,7 +105,6 @@ export const ShortcutInput: React.FC<ShortcutInputProps> = ({
     };
   }, [isRecording, handleKeyDown, handleKeyUp]);
 
-  // Какие клавиши показывать (текущие записываемые или уже сохраненные)
   const displayKeys = isRecording && liveKeys.length > 0 ? liveKeys : value;
 
   return (
@@ -143,7 +137,7 @@ export const ShortcutInput: React.FC<ShortcutInputProps> = ({
         </div>
       ) : (
         <span className="text-muted-foreground">
-          {isRecording ? "Reading keys..." : placeholder}
+          {isRecording ? "Слушаю клавиши..." : placeholder}
         </span>
       )}
     </div>

@@ -2,10 +2,12 @@ import { useRef, useEffect, type ChangeEvent } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import Tooltip from '@/components/ui/Tooltip';
 import { ChevronsRightIcon, MicIcon, Volume2, Lightbulb } from 'lucide-react';
+import isShortcutPressed from '@/app/helpers/isShortcutPressed';
 import useTranslation from '../hooks/useTranslation';
 import useSettings from '@/app/hooks/useSettings';
 import useDetectAndSwap from '../hooks/useDetectAndSwap';
 import useTextToSpeech from '../hooks/useTextToSpeech';
+
 
 export default function () {
   const { settings } = useSettings();
@@ -14,7 +16,6 @@ export default function () {
   } = useTranslation();
   const { speak } = useTextToSpeech();
   const inputTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const pressedKeysRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const handleFocus = () => {
@@ -42,18 +43,23 @@ export default function () {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    pressedKeysRef.current.add(e.key.toLowerCase());
-
-    if (settings.clearShortcut.every(key => pressedKeysRef.current.has(key.toLowerCase())))
+    if (isShortcutPressed(e, settings.clearShortcut)) {
+      e.preventDefault();
       updateSourceText('');
-    if (settings.swapLangsShortcut.every(key => pressedKeysRef.current.has(key.toLowerCase())))
-      swapLangs(true);
-    if (settings.applyCorrectionShortcut.every(key => pressedKeysRef.current.has(key.toLowerCase())))
-      handleApplySuggestion() // this function checks if sourceCorrection is empty
-  }
+      return;
+    }
 
-  const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    pressedKeysRef.current.delete(e.key.toLowerCase());
+    if (isShortcutPressed(e, settings.swapLangsShortcut)) {
+      e.preventDefault();
+      swapLangs(true);
+      return;
+    }
+
+    if (isShortcutPressed(e, settings.applyCorrectionShortcut)) {
+      e.preventDefault();
+      handleApplySuggestion();
+      return;
+    }
   }
 
   return (
@@ -64,7 +70,6 @@ export default function () {
         value={sourceText}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        onKeyUp={handleKeyUp}
       />
       <div className="absolute bottom-1.5 right-1.5 left-1.5 flex justify-between items-center gap-2">
         {translationResult.response.sourceCorrection &&
