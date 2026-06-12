@@ -17,6 +17,8 @@ export interface DictionaryMeta {
 
   createdAt: number
   updatedAt: number
+
+  isFavorites?: boolean
 }
 
 export interface Dictionary {

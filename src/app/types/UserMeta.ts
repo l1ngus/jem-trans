@@ -12,6 +12,7 @@ export const LangPairSchema = z.object({
 
 export const UserMetaSchema = z.object({
   lastLangPair: LangPairSchema.default({ source: 'auto', target: 'eng' }),
+  favoriteDictionaryId: z.string().default(""),
 });
 
 export type UserMeta = z.infer<typeof UserMetaSchema>;

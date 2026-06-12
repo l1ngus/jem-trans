@@ -20,7 +20,8 @@ export async function getDictionary(id: string): Promise<Dictionary | undefined>
 }
 
 export async function createDictionary(
-  params: Pick<DictionaryMeta, 'name' | 'description' | 'sourceLang' | 'targetLang'>
+  params: Pick<DictionaryMeta, 'name' | 'description' | 'sourceLang' | 'targetLang'>,
+  isFavorites: boolean = false
 ): Promise<Dictionary> {
   const dicts = await getAllDictionaries();
   const now = Date.now();
@@ -33,6 +34,7 @@ export async function createDictionary(
       targetLang: params.targetLang,
       createdAt: now,
       updatedAt: now,
+      isFavorites
     },
     pairs: [],
   };
