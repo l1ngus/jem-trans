@@ -1,5 +1,5 @@
+import { SquarePen, StickyNotes } from 'lucide-react';
 import { DictionaryMeta } from "@/app/types/Dictionary"
-import { Button } from "@/components/ui/button";
 import { useDictionariesView } from "../../hooks/useDictionariesView";
 
 interface DictionaryCardProps {
@@ -12,9 +12,9 @@ export default ({ dictMeta }: DictionaryCardProps) => {
   return (
     <div className="flex justify-between py-1.5 px-3 border rounded-md items-center">
       <b>{dictMeta.name}</b>
-      <div className="flex gap-1">
-        <Button size="sm" variant="outline" onClick={() => openEditorView(dictMeta.id)}>Edit</Button>
-        <Button size="sm" variant="outline">Open</Button>
+      <div className="flex items-center gap-3">
+        <SquarePen onClick={() => openEditorView(dictMeta.id)} className='cursor-pointer hover:scale-110 transition-transform duration-200' />
+        <StickyNotes className='cursor-pointer hover:scale-110 transition-transform duration-200' />
       </div>
     </div>
   )

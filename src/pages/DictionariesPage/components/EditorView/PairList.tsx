@@ -63,7 +63,7 @@ export default ({ dictId, pairs, onChanged }: PairListProps) => {
           />
         ))}
         {pairs.length === 0 && (
-          <p className="text-sm text-muted-foreground">No pairs yet.</p>
+          <p className="text-sm text-muted-foreground text-center">No pairs yet.</p>
         )}
       </div>
     </div>
