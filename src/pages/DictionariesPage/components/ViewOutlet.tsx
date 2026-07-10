@@ -1,5 +1,6 @@
 import { useDictionariesView } from "../hooks/useDictionariesView"
 import EditorView from "./EditorView/EditorView";
+import FlascardsView from "./FlashcardsView/FlashcardsView";
 import ListView from "./ListView/ListView";
 
 
@@ -7,7 +8,14 @@ export default () => {
   const { currentView } = useDictionariesView();
 
   let ViewComponent = ListView;
-  if (currentView === 'editor') ViewComponent = EditorView
+  switch (currentView) {
+    case 'editor':
+      ViewComponent = EditorView;
+      break;
+    case 'flashcards':
+      ViewComponent = FlascardsView;
+      break;
+  }
 
   return < ViewComponent />
 }

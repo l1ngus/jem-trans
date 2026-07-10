@@ -24,7 +24,7 @@ export default function () {
             </Button>
           }
 
-          {currentView === 'editor' &&
+          {currentView !== 'list' &&
             <Button className="font-bold rounded-lg" variant="outline" size="sm"
               onClick={() => openListView()}>
               Back
