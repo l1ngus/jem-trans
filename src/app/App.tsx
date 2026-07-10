@@ -14,7 +14,7 @@ function App() {
   return (
     <PageProvider>
       <AppBar />
-      <main>
+      <main className='flex flex-col flex-1' >
         <Outlet />
       </main>
     </PageProvider>

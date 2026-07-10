@@ -1,12 +1,13 @@
 import { useMemo, createContext, type PropsWithChildren, useState } from 'react';
 
-export type DictView = 'list' | 'editor';
+export type DictView = 'list' | 'editor' | 'flashcards';
 
 export interface DictionariesViewContextValue {
   currentView: DictView;
   dictId: string | null;
   openListView: () => void;
   openEditorView: (dictId: string) => void;
+  openFlashcardsView: (dictId: string) => void;
 }
 
 export const DictionariesContext = createContext<DictionariesViewContextValue | null>(null);
@@ -25,11 +26,17 @@ export const DictionariesViewProvider = ({ children }: PropsWithChildren) => {
     setDictId(null);
   }
 
+  const openFlashcardsView = (learningDictId: string) => {
+    setCurrentView('flashcards');
+    setDictId(learningDictId);
+  }
+
   const contextValue = useMemo<DictionariesViewContextValue>(() => ({
     currentView,
     dictId,
     openListView,
-    openEditorView
+    openEditorView,
+    openFlashcardsView
   }), [currentView])
 
   return (

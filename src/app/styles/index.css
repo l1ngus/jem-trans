@@ -149,6 +149,12 @@
     @apply bg-background text-foreground;
     margin: var(--body-margin);
   }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - var(--body-margin) * 2);
+  }
 }
 
 /* Фикс для моргания закрывающихся компонентов Radix UI в WebKit/Tauri */
