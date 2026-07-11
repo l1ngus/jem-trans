@@ -23,6 +23,9 @@ export const AppSettingsSchema = z.object({
   clearShortcut: z.array(z.string()).default([]),
   swapLangsShortcut: z.array(z.string()).default([]),
   applyCorrectionShortcut: z.array(z.string()).default([]),
+  prevFlashcardShortcut: z.array(z.string()).default([]),
+  nextFlashcardShortcut: z.array(z.string()).default([]),
+  flipFlashcardShortcut: z.array(z.string()).default([])
 });
 
 export type AppSettings = z.infer<typeof AppSettingsSchema>;
