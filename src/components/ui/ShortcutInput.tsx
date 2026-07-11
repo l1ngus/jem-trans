@@ -21,7 +21,7 @@ const MODIFIER_CODES = [
 export const ShortcutInput: React.FC<ShortcutInputProps> = ({
   value,
   onChange,
-  placeholder = "Нажмите для записи...",
+  placeholder = "Empty",
   className,
 }) => {
   const [isRecording, setIsRecording] = useState(false);

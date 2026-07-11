@@ -1,6 +1,6 @@
 import formatKeyboardCode from "./formatKeyboardCode";
 
-export default (e: React.KeyboardEvent, shortcut: string[]) => {
+export default (e: React.KeyboardEvent | KeyboardEvent, shortcut: string[]) => {
   if (!shortcut || shortcut.length === 0) return false;
 
   // Проверяем, требует ли шорткат зажатых модификаторов
