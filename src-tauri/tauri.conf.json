@@ -13,10 +13,10 @@
     "windows": [
       {
         "title": "jem-trans",
-        "decorations": true,
+        "decorations": false,
         "width": 550,
         "height": 300,
-        "visible": true
+        "visible": false
       }
     ],
     "security": {
