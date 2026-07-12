@@ -23,6 +23,7 @@ export default (translateOptions: UseOtherTranslationsQueryOptions): UseOtherTra
   const llmProfile = useActiveLlmProfile();
 
   const fetchOtherTranslations = async ({ sourceText, translatedText, sourceLang, targetLang }: UseOtherTranslationsQueryOptions): Promise<OtherTranslationsResponse> => {
+    if (!llmProfile) throw new Error("No LLM profile selected.");
     const prompt = getOtherTranslationsPrompt({ sourceText, translatedText, sourceLang, targetLang });
     console.log(`Alt request; isEn: ${translateOptions.isEnabled}`);
     const response = await commands.askLlm([{
@@ -43,7 +44,8 @@ export default (translateOptions: UseOtherTranslationsQueryOptions): UseOtherTra
     return result;
   }
 
-  const isEnabled = (translateOptions.isEnabled || typeof (translateOptions.isEnabled) === 'undefined')
+  const isEnabled = !!llmProfile
+    && (translateOptions.isEnabled || typeof (translateOptions.isEnabled) === 'undefined')
     && (
       !!translateOptions.translatedText
       && (!translateOptions.maxSourceLength || translateOptions.sourceText.length <= translateOptions.maxSourceLength)

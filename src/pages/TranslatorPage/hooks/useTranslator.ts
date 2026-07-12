@@ -17,6 +17,7 @@ export default () => {
   const llmProfile = useActiveLlmProfile();
 
   const translateViaLlm = async ({ term, sourceLang, targetLang }: TranslateParams): Promise<TranslateResponse> => {
+    if (!llmProfile) throw new Error("No LLM profile selected. Go to Settings to add one.");
     const prompt = getTranslationPrompt({ text: term, sourceLang, targetLang });
     const response = await commands.askLlm([{
       role: 'user',
