@@ -1,8 +1,41 @@
 ![Lucid Spell header](assets/lucid-spell-header.png)
-
 ## Lucid Spell
 
 A desktop translator powered by LLMs, it uses your API key to translate text. Built with Tauri 2 + React + TypeScript + Tailwind CSS.
+
+## Download
+
+Prebuilt binaries are available on the [releases page](https://github.com/l1ngus/lucid-spell/releases).
+
+### Windows
+
+`.msi` • `.exe`
+
+### Linux
+
+`.deb` • `.AppImage` • `.rpm`
+
+### macOS
+
+`.dmg` (Intel & Apple Silicon)
+
+### Flatpak
+
+```sh
+flatpak install flathub com.example.lucid-spell
+```
+
+[Flathub](https://flathub.org/apps/...) — *coming soon*
+
+### AUR
+
+```sh
+# Build from source
+yay -S lucid-spell
+
+# Prebuilt binary
+yay -S lucid-spell-bin
+```
 
 ## Screenshots
 
@@ -14,10 +47,6 @@ A desktop translator powered by LLMs, it uses your API key to translate text. Bu
   <img src="assets/screenshot-dictionaries-dark.png" width="48%" />
 </p>
 
-## Download
-
-[Download latest release](https://github.com/l1ngus/lucid-spell/releases)
-
 ## Features
 
 - Translate text using any OpenAI-compatible API (remote or local)
@@ -26,3 +55,4 @@ A desktop translator powered by LLMs, it uses your API key to translate text. Bu
 - Custom dictionaries & flashcards
 - Proxy support (SOCKS5/HTTP/HTTPS)
 - Keyboard shortcuts
+
