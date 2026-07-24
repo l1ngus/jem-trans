@@ -62,6 +62,13 @@ Prebuilt binaries for your operating system are available on the GitHub Releases
 
 ---
 
+## 🔒 Security & Data Privacy
+
+- **Local Processing (Mostly):** All your dictionaries, flashcards, and settings are stored locally. The only external connections are to the LLM providers (OpenAI, Anthropic, etc.) and TTS services.
+- **API Key Storage:** Please note that API keys and proxy credentials are saved **unencrypted** in your OS local app data directory. Rely on your OS user profile isolation to keep this data safe, and do not use the app on public or shared computers.
+
+---
+
 ## 📸 Screenshots
 
 <p align="center">
